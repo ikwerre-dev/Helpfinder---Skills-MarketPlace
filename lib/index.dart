@@ -1,5 +1,5 @@
 // Export pages
-export '/pages/onboarding/welcome_page/welcome_page_widget.dart'
+export '/registeration/welcome_page/welcome_page_widget.dart'
     show WelcomePageWidget;
 export '/pages/main/home_page/home_page_widget.dart' show HomePageWidget;
 export '/registeration/mobile_sign_in/mobile_sign_in_widget.dart'

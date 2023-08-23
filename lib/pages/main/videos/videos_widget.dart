@@ -36,12 +36,11 @@ class _VideosWidgetState extends State<VideosWidget> {
       );
       if ((_model.apiResult10a?.succeeded ?? true)) {
         setState(() {
-          FFAppState().clips = getJsonField(
+          FFAppState().clipsurl = FetchVideosCall.videoUrl(
             (_model.apiResult10a?.jsonBody ?? ''),
-            r'''$''',
           )!
               .toList()
-              .cast<dynamic>();
+              .cast<String>();
         });
       }
     });
@@ -65,7 +64,7 @@ class _VideosWidgetState extends State<VideosWidget> {
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: Builder(
           builder: (context) {
-            final clips = FFAppState().clips.toList();
+            final clips = FFAppState().clipsurl.map((e) => e).toList();
             return Container(
               width: double.infinity,
               height: MediaQuery.sizeOf(context).height * 1.0,
@@ -78,35 +77,20 @@ class _VideosWidgetState extends State<VideosWidget> {
                     itemCount: clips.length,
                     itemBuilder: (context, clipsIndex) {
                       final clipsItem = clips[clipsIndex];
-                      return Stack(
-                        children: [
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: FlutterFlowVideoPlayer(
-                              path: getJsonField(
-                                clipsItem,
-                                r'''$.videos[:].url''',
-                              ),
-                              videoType: VideoType.network,
-                              width: MediaQuery.sizeOf(context).width * 1.0,
-                              height: MediaQuery.sizeOf(context).height * 1.0,
-                              aspectRatio: 1.00,
-                              autoPlay: true,
-                              looping: true,
-                              showControls: false,
-                              allowFullScreen: false,
-                              allowPlaybackSpeedMenu: true,
-                            ),
-                          ),
-                          Container(
-                            width: 100.0,
-                            height: 100.0,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                            ),
-                          ),
-                        ],
+                      return Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
+                        child: FlutterFlowVideoPlayer(
+                          path: clipsItem,
+                          videoType: VideoType.network,
+                          width: MediaQuery.sizeOf(context).width * 1.0,
+                          height: MediaQuery.sizeOf(context).height * 1.0,
+                          aspectRatio: 1.00,
+                          autoPlay: true,
+                          looping: true,
+                          showControls: false,
+                          allowFullScreen: false,
+                          allowPlaybackSpeedMenu: false,
+                        ),
                       );
                     },
                   ),

@@ -114,6 +114,13 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget>
     super.initState();
     _model = createModel(context, () => WelcomePageModel());
 
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (FFAppState().userid != null && FFAppState().userid != '') {
+        context.goNamed('HomePage');
+      }
+    });
+
     setupAnimations(
       animationsMap.values.where((anim) =>
           anim.trigger == AnimationTrigger.onActionTrigger ||

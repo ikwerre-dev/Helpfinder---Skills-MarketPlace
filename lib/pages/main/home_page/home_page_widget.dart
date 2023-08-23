@@ -115,6 +115,13 @@ class _HomePageWidgetState extends State<HomePageWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (FFAppState().userid == null || FFAppState().userid == '') {
+        context.goNamed('WelcomePage');
+      }
+    });
   }
 
   @override

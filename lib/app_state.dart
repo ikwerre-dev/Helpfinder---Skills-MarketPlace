@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'backend/api_requests/api_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/flutter_flow_util.dart';
-import 'dart:convert';
 
 class FFAppState extends ChangeNotifier {
   static final FFAppState _instance = FFAppState._internal();
@@ -33,15 +32,7 @@ class FFAppState extends ChangeNotifier {
       _lastname = prefs.getString('ff_lastname') ?? _lastname;
     });
     _safeInit(() {
-      _clips = prefs.getStringList('ff_clips')?.map((x) {
-            try {
-              return jsonDecode(x);
-            } catch (e) {
-              print("Can't decode persisted json. Error: $e.");
-              return {};
-            }
-          }).toList() ??
-          _clips;
+      _clipsurl = prefs.getStringList('ff_clipsurl') ?? _clipsurl;
     });
   }
 
@@ -145,34 +136,34 @@ class FFAppState extends ChangeNotifier {
     prefs.setString('ff_lastname', _value);
   }
 
-  List<dynamic> _clips = [];
-  List<dynamic> get clips => _clips;
-  set clips(List<dynamic> _value) {
-    _clips = _value;
-    prefs.setStringList('ff_clips', _value.map((x) => jsonEncode(x)).toList());
+  List<String> _clipsurl = [];
+  List<String> get clipsurl => _clipsurl;
+  set clipsurl(List<String> _value) {
+    _clipsurl = _value;
+    prefs.setStringList('ff_clipsurl', _value);
   }
 
-  void addToClips(dynamic _value) {
-    _clips.add(_value);
-    prefs.setStringList('ff_clips', _clips.map((x) => jsonEncode(x)).toList());
+  void addToClipsurl(String _value) {
+    _clipsurl.add(_value);
+    prefs.setStringList('ff_clipsurl', _clipsurl);
   }
 
-  void removeFromClips(dynamic _value) {
-    _clips.remove(_value);
-    prefs.setStringList('ff_clips', _clips.map((x) => jsonEncode(x)).toList());
+  void removeFromClipsurl(String _value) {
+    _clipsurl.remove(_value);
+    prefs.setStringList('ff_clipsurl', _clipsurl);
   }
 
-  void removeAtIndexFromClips(int _index) {
-    _clips.removeAt(_index);
-    prefs.setStringList('ff_clips', _clips.map((x) => jsonEncode(x)).toList());
+  void removeAtIndexFromClipsurl(int _index) {
+    _clipsurl.removeAt(_index);
+    prefs.setStringList('ff_clipsurl', _clipsurl);
   }
 
-  void updateClipsAtIndex(
+  void updateClipsurlAtIndex(
     int _index,
-    dynamic Function(dynamic) updateFn,
+    String Function(String) updateFn,
   ) {
-    _clips[_index] = updateFn(_clips[_index]);
-    prefs.setStringList('ff_clips', _clips.map((x) => jsonEncode(x)).toList());
+    _clipsurl[_index] = updateFn(_clipsurl[_index]);
+    prefs.setStringList('ff_clipsurl', _clipsurl);
   }
 }
 
