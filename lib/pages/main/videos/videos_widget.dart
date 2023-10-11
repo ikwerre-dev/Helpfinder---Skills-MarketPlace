@@ -2,6 +2,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_video_player.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
     as smooth_page_indicator;
 import 'package:flutter/material.dart';
@@ -34,15 +35,7 @@ class _VideosWidgetState extends State<VideosWidget> {
       _model.apiResult10a = await FetchVideosCall.call(
         user: FFAppState().userid,
       );
-      if ((_model.apiResult10a?.succeeded ?? true)) {
-        setState(() {
-          FFAppState().clipsurl = FetchVideosCall.videoUrl(
-            (_model.apiResult10a?.jsonBody ?? ''),
-          )!
-              .toList()
-              .cast<String>();
-        });
-      }
+      if ((_model.apiResult10a?.succeeded ?? true)) {}
     });
   }
 
@@ -58,7 +51,9 @@ class _VideosWidgetState extends State<VideosWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -78,7 +73,7 @@ class _VideosWidgetState extends State<VideosWidget> {
                     itemBuilder: (context, clipsIndex) {
                       final clipsItem = clips[clipsIndex];
                       return Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
+                        alignment: AlignmentDirectional(0.00, 0.00),
                         child: FlutterFlowVideoPlayer(
                           path: clipsItem,
                           videoType: VideoType.network,
@@ -90,12 +85,13 @@ class _VideosWidgetState extends State<VideosWidget> {
                           showControls: false,
                           allowFullScreen: false,
                           allowPlaybackSpeedMenu: false,
+                          lazyLoad: true,
                         ),
                       );
                     },
                   ),
                   Align(
-                    alignment: AlignmentDirectional(-1.0, 0.0),
+                    alignment: AlignmentDirectional(-1.00, 0.00),
                     child: Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 16.0),

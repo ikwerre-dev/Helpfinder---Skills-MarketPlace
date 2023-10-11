@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'flutter_flow/request_manager.dart';
 import 'backend/api_requests/api_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 
 class FFAppState extends ChangeNotifier {
-  static final FFAppState _instance = FFAppState._internal();
+  static FFAppState _instance = FFAppState._internal();
 
   factory FFAppState() {
     return _instance;
   }
 
   FFAppState._internal();
+
+  static void reset() {
+    _instance = FFAppState._internal();
+  }
 
   Future initializePersistedState() async {
     prefs = await SharedPreferences.getInstance();
@@ -33,6 +38,19 @@ class FFAppState extends ChangeNotifier {
     });
     _safeInit(() {
       _clipsurl = prefs.getStringList('ff_clipsurl') ?? _clipsurl;
+    });
+    _safeInit(() {
+      _profilepicture = prefs.getString('ff_profilepicture') ?? _profilepicture;
+    });
+    _safeInit(() {
+      _phonenumber = prefs.getString('ff_phonenumber') ?? _phonenumber;
+    });
+    _safeInit(() {
+      _fingerprint = prefs.getString('ff_fingerprint') ?? _fingerprint;
+    });
+    _safeInit(() {
+      _fingerprintPassword =
+          prefs.getString('ff_fingerprintPassword') ?? _fingerprintPassword;
     });
   }
 
@@ -73,6 +91,11 @@ class FFAppState extends ChangeNotifier {
     prefs.setStringList('ff_xAxis', _xAxis.map((x) => x.toString()).toList());
   }
 
+  void insertAtIndexInXAxis(int _index, double _value) {
+    _xAxis.insert(_index, _value);
+    prefs.setStringList('ff_xAxis', _xAxis.map((x) => x.toString()).toList());
+  }
+
   List<double> _yAxis = [2, 3, 6, 4, 5, 3, 4];
   List<double> get yAxis => _yAxis;
   set yAxis(List<double> _value) {
@@ -103,16 +126,15 @@ class FFAppState extends ChangeNotifier {
     prefs.setStringList('ff_yAxis', _yAxis.map((x) => x.toString()).toList());
   }
 
+  void insertAtIndexInYAxis(int _index, double _value) {
+    _yAxis.insert(_index, _value);
+    prefs.setStringList('ff_yAxis', _yAxis.map((x) => x.toString()).toList());
+  }
+
   String _otp = '';
   String get otp => _otp;
   set otp(String _value) {
     _otp = _value;
-  }
-
-  String _phonenumber = '';
-  String get phonenumber => _phonenumber;
-  set phonenumber(String _value) {
-    _phonenumber = _value;
   }
 
   String _userid = '';
@@ -165,6 +187,60 @@ class FFAppState extends ChangeNotifier {
     _clipsurl[_index] = updateFn(_clipsurl[_index]);
     prefs.setStringList('ff_clipsurl', _clipsurl);
   }
+
+  void insertAtIndexInClipsurl(int _index, String _value) {
+    _clipsurl.insert(_index, _value);
+    prefs.setStringList('ff_clipsurl', _clipsurl);
+  }
+
+  String _profilepicture = '';
+  String get profilepicture => _profilepicture;
+  set profilepicture(String _value) {
+    _profilepicture = _value;
+    prefs.setString('ff_profilepicture', _value);
+  }
+
+  String _phonenumber = '';
+  String get phonenumber => _phonenumber;
+  set phonenumber(String _value) {
+    _phonenumber = _value;
+    prefs.setString('ff_phonenumber', _value);
+  }
+
+  String _fingerprint = '';
+  String get fingerprint => _fingerprint;
+  set fingerprint(String _value) {
+    _fingerprint = _value;
+    prefs.setString('ff_fingerprint', _value);
+  }
+
+  String _fingerprintPassword = '';
+  String get fingerprintPassword => _fingerprintPassword;
+  set fingerprintPassword(String _value) {
+    _fingerprintPassword = _value;
+    prefs.setString('ff_fingerprintPassword', _value);
+  }
+
+  String _search = '';
+  String get search => _search;
+  set search(String _value) {
+    _search = _value;
+  }
+
+  final _searchqueryManager = FutureRequestManager<ApiCallResponse>();
+  Future<ApiCallResponse> searchquery({
+    String? uniqueQueryKey,
+    bool? overrideCache,
+    required Future<ApiCallResponse> Function() requestFn,
+  }) =>
+      _searchqueryManager.performRequest(
+        uniqueQueryKey: uniqueQueryKey,
+        overrideCache: overrideCache,
+        requestFn: requestFn,
+      );
+  void clearSearchqueryCache() => _searchqueryManager.clear();
+  void clearSearchqueryCacheKey(String? uniqueKey) =>
+      _searchqueryManager.clearRequest(uniqueKey);
 }
 
 LatLng? _latLngFromString(String? val) {

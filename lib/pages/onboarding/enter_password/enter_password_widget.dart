@@ -70,7 +70,9 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -104,6 +106,7 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
                       width: 120.0,
                       lineHeight: 8.0,
                       animation: true,
+                      animateFromLastPercent: true,
                       progressColor: Color(0xFF7165E3),
                       backgroundColor: Color(0xFFE9E9E9),
                       barRadius: Radius.circular(12.0),
@@ -145,6 +148,7 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     RichText(
+                      textScaleFactor: MediaQuery.of(context).textScaleFactor,
                       text: TextSpan(
                         children: [
                           TextSpan(
@@ -236,7 +240,7 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
                             ],
                             borderRadius: BorderRadius.circular(12.0),
                           ),
-                          alignment: AlignmentDirectional(0.0, 0.0),
+                          alignment: AlignmentDirectional(0.00, 0.00),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
@@ -348,7 +352,7 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
                             ],
                             borderRadius: BorderRadius.circular(12.0),
                           ),
-                          alignment: AlignmentDirectional(0.0, 0.0),
+                          alignment: AlignmentDirectional(0.00, 0.00),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [

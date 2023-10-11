@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import '/index.dart';
 import '/main.dart';
@@ -109,9 +110,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => TurnOnNotificationWidget(),
             ),
             FFRoute(
-              name: 'Userdetails',
-              path: 'userdetails',
-              builder: (context, params) => UserdetailsWidget(),
+              name: 'personalProfile',
+              path: 'personalProfile',
+              builder: (context, params) => PersonalProfileWidget(),
             ),
             FFRoute(
               name: 'ProfilePicture',
@@ -119,9 +120,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => ProfilePictureWidget(),
             ),
             FFRoute(
-              name: 'WeightEntry',
-              path: 'weightEntry',
-              builder: (context, params) => WeightEntryWidget(),
+              name: 'AccountType',
+              path: 'accountType',
+              builder: (context, params) => AccountTypeWidget(),
             ),
             FFRoute(
               name: 'UserInterest',
@@ -162,6 +163,32 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
                       initialPage: 'setting',
                       page: SettingWidget(),
                     ),
+            ),
+            FFRoute(
+              name: 'Login',
+              path: 'login',
+              builder: (context, params) => LoginWidget(),
+            ),
+            FFRoute(
+              name: 'businessProfile',
+              path: 'businessProfile',
+              builder: (context, params) => BusinessProfileWidget(),
+            ),
+            FFRoute(
+              name: 'location',
+              path: 'location',
+              builder: (context, params) => LocationWidget(),
+            ),
+            FFRoute(
+              name: 'profilePage',
+              path: 'profilePage',
+              builder: (context, params) => NavBarPage(
+                initialPage: '',
+                page: ProfilePageWidget(
+                  user: params.getParam('user', ParamType.String),
+                  json: params.getParam('json', ParamType.JSON),
+                ),
+              ),
             )
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ),
@@ -321,4 +348,24 @@ class TransitionInfo {
   final Alignment? alignment;
 
   static TransitionInfo appDefault() => TransitionInfo(hasTransition: false);
+}
+
+class RootPageContext {
+  const RootPageContext(this.isRootPage, [this.errorRoute]);
+  final bool isRootPage;
+  final String? errorRoute;
+
+  static bool isInactiveRootPage(BuildContext context) {
+    final rootPageContext = context.read<RootPageContext?>();
+    final isRootPage = rootPageContext?.isRootPage ?? false;
+    final location = GoRouter.of(context).location;
+    return isRootPage &&
+        location != '/' &&
+        location != rootPageContext?.errorRoute;
+  }
+
+  static Widget wrap(Widget child, {String? errorRoute}) => Provider.value(
+        value: RootPageContext(true, errorRoute),
+        child: child,
+      );
 }

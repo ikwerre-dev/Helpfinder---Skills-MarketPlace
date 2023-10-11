@@ -46,6 +46,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
 
@@ -130,14 +131,14 @@ class _NavBarPageState extends State<NavBarPage> {
           _currentPage = null;
           _currentPageName = tabs.keys.toList()[i];
         }),
-        backgroundColor: FlutterFlowTheme.of(context).secondary,
+        backgroundColor: Colors.black,
         selectedItemColor: FlutterFlowTheme.of(context).primaryBackground,
         unselectedItemColor: FlutterFlowTheme.of(context).primaryBtnText,
-        selectedBackgroundColor: Color(0xFF9E95FA),
+        selectedBackgroundColor: FlutterFlowTheme.of(context).primary,
         borderRadius: 45.0,
         itemBorderRadius: 45.0,
-        margin: EdgeInsetsDirectional.fromSTEB(15.0, 15.0, 15.0, 15.0),
-        padding: EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
+        margin: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+        padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
         width: double.infinity,
         elevation: 0.0,
         items: [

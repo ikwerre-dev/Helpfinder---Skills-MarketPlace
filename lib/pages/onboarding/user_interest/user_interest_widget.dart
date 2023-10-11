@@ -219,7 +219,9 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -253,6 +255,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                       width: 120.0,
                       lineHeight: 8.0,
                       animation: true,
+                      animateFromLastPercent: true,
                       progressColor: Color(0xFF7165E3),
                       backgroundColor: Color(0xFFE9E9E9),
                       barRadius: Radius.circular(12.0),
@@ -294,6 +297,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     RichText(
+                      textScaleFactor: MediaQuery.of(context).textScaleFactor,
                       text: TextSpan(
                         children: [
                           TextSpan(

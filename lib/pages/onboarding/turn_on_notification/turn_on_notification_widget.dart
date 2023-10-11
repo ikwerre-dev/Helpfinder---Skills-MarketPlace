@@ -68,7 +68,9 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -102,6 +104,7 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
                       width: 120.0,
                       lineHeight: 8.0,
                       animation: true,
+                      animateFromLastPercent: true,
                       progressColor: Color(0xFF7165E3),
                       backgroundColor: Color(0xFFE9E9E9),
                       barRadius: Radius.circular(12.0),
@@ -143,6 +146,7 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     RichText(
+                      textScaleFactor: MediaQuery.of(context).textScaleFactor,
                       text: TextSpan(
                         children: [
                           TextSpan(
@@ -231,7 +235,7 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
                                           shape: BoxShape.circle,
                                         ),
                                         alignment:
-                                            AlignmentDirectional(0.0, 0.0),
+                                            AlignmentDirectional(0.00, 0.00),
                                         child: Icon(
                                           Icons.notifications,
                                           color: Colors.white,
@@ -270,7 +274,7 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
                                             shape: BoxShape.circle,
                                           ),
                                           alignment:
-                                              AlignmentDirectional(0.0, 0.0),
+                                              AlignmentDirectional(0.00, 0.00),
                                           child: Icon(
                                             Icons.spa,
                                             color: Colors.white,
@@ -311,7 +315,7 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
                                             shape: BoxShape.circle,
                                           ),
                                           alignment:
-                                              AlignmentDirectional(0.0, 0.0),
+                                              AlignmentDirectional(0.00, 0.00),
                                           child: Icon(
                                             Icons.personal_video_outlined,
                                             color: Colors.white,
@@ -350,7 +354,7 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
                 child: FFButtonWidget(
                   onPressed: () async {
                     context.pushNamed(
-                      'Userdetails',
+                      'personalProfile',
                       extra: <String, dynamic>{
                         kTransitionInfoKey: TransitionInfo(
                           hasTransition: true,

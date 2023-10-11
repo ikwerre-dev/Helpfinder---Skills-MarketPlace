@@ -64,7 +64,9 @@ class _GetStartedWidgetState extends State<GetStartedWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -81,8 +83,8 @@ class _GetStartedWidgetState extends State<GetStartedWidget>
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       SvgPicture.asset(
-                        'assets/images/jogging.svg',
-                        height: 228.0,
+                        'assets/images/verified.svg',
+                        height: 283.0,
                         fit: BoxFit.cover,
                       ).animateOnPageLoad(
                           animationsMap['imageOnPageLoadAnimation']!),
