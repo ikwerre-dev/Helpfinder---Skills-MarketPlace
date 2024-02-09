@@ -7,6 +7,7 @@ import 'enter_password_widget.dart' show EnterPasswordWidget;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,10 +19,12 @@ class EnterPasswordModel extends FlutterFlowModel<EnterPasswordWidget> {
 
   final unfocusNode = FocusNode();
   // State field(s) for Password widget.
+  FocusNode? passwordFocusNode1;
   TextEditingController? passwordController1;
   late bool passwordVisibility1;
   String? Function(BuildContext, String?)? passwordController1Validator;
   // State field(s) for Password widget.
+  FocusNode? passwordFocusNode2;
   TextEditingController? passwordController2;
   late bool passwordVisibility2;
   String? Function(BuildContext, String?)? passwordController2Validator;
@@ -35,7 +38,10 @@ class EnterPasswordModel extends FlutterFlowModel<EnterPasswordWidget> {
 
   void dispose() {
     unfocusNode.dispose();
+    passwordFocusNode1?.dispose();
     passwordController1?.dispose();
+
+    passwordFocusNode2?.dispose();
     passwordController2?.dispose();
   }
 

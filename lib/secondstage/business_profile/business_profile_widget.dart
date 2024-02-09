@@ -1,19 +1,24 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
+import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/form_field_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'business_profile_model.dart';
 export 'business_profile_model.dart';
 
 class BusinessProfileWidget extends StatefulWidget {
-  const BusinessProfileWidget({Key? key}) : super(key: key);
+  const BusinessProfileWidget({super.key});
 
   @override
-  _BusinessProfileWidgetState createState() => _BusinessProfileWidgetState();
+  State<BusinessProfileWidget> createState() => _BusinessProfileWidgetState();
 }
 
 class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
@@ -27,11 +32,25 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
     _model = createModel(context, () => BusinessProfileModel());
 
     _model.firstnameController ??= TextEditingController();
+    _model.firstnameFocusNode ??= FocusNode();
+
     _model.lastnameController ??= TextEditingController();
+    _model.lastnameFocusNode ??= FocusNode();
+
     _model.emailController ??= TextEditingController();
+    _model.emailFocusNode ??= FocusNode();
+
     _model.passwordController ??= TextEditingController();
-    _model.businessnameController ??= TextEditingController();
+    _model.passwordFocusNode ??= FocusNode();
+
+    _model.confirmpasswordController ??= TextEditingController();
+    _model.confirmpasswordFocusNode ??= FocusNode();
+
+    _model.personalprofileController ??= TextEditingController();
+    _model.personalprofileFocusNode ??= FocusNode();
+
     _model.businessdescriptionController ??= TextEditingController();
+    _model.businessdescriptionFocusNode ??= FocusNode();
   }
 
   @override
@@ -43,6 +62,15 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -126,6 +154,7 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
                               28.0, 0.0, 28.0, 10.0),
                           child: TextFormField(
                             controller: _model.firstnameController,
+                            focusNode: _model.firstnameFocusNode,
                             obscureText: false,
                             decoration: InputDecoration(
                               labelText: 'First Name',
@@ -181,6 +210,7 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
                               28.0, 0.0, 28.0, 10.0),
                           child: TextFormField(
                             controller: _model.lastnameController,
+                            focusNode: _model.lastnameFocusNode,
                             obscureText: false,
                             decoration: InputDecoration(
                               labelText: 'Last Name',
@@ -236,6 +266,7 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
                               28.0, 0.0, 28.0, 10.0),
                           child: TextFormField(
                             controller: _model.emailController,
+                            focusNode: _model.emailFocusNode,
                             obscureText: false,
                             decoration: InputDecoration(
                               labelText: 'Email Address',
@@ -286,11 +317,179 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
                                 .asValidator(context),
                           ),
                         ),
+                        if (FFAppState().accounttype == 1)
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 10.0),
+                            child: FutureBuilder<ApiCallResponse>(
+                              future: FFAppState().category(
+                                requestFn: () => SearchSpecializationsCall.call(
+                                  id: FFAppState().userid,
+                                  accountType: FFAppState().accounttype,
+                                  q: 'hi',
+                                ),
+                              ),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                final specializationSearchSpecializationsResponse =
+                                    snapshot.data!;
+                                return FlutterFlowDropDown<String>(
+                                  controller:
+                                      _model.specializationValueController ??=
+                                          FormFieldController<String>(
+                                    _model.specializationValue ??= '1',
+                                  ),
+                                  options: List<String>.from((getJsonField(
+                                    specializationSearchSpecializationsResponse
+                                        .jsonBody,
+                                    r'''$.specializations[:].id''',
+                                    true,
+                                  ) as List)
+                                      .map<String>((s) => s.toString())
+                                      .toList()!),
+                                  optionLabels: (getJsonField(
+                                    specializationSearchSpecializationsResponse
+                                        .jsonBody,
+                                    r'''$.specializations[:].specialization''',
+                                    true,
+                                  ) as List)
+                                      .map<String>((s) => s.toString())
+                                      .toList()!,
+                                  onChanged: (val) => setState(
+                                      () => _model.specializationValue = val),
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.85,
+                                  height: 50.0,
+                                  searchHintTextStyle:
+                                      FlutterFlowTheme.of(context).labelMedium,
+                                  searchTextStyle:
+                                      FlutterFlowTheme.of(context).bodyMedium,
+                                  textStyle:
+                                      FlutterFlowTheme.of(context).bodyMedium,
+                                  hintText: 'Specialization',
+                                  searchHintText: 'Search for an item...',
+                                  searchCursorColor:
+                                      FlutterFlowTheme.of(context).primary,
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    size: 24.0,
+                                  ),
+                                  fillColor: Color(0xFFE0DEF5),
+                                  elevation: 2.0,
+                                  borderColor: Colors.transparent,
+                                  borderWidth: 2.0,
+                                  borderRadius: 8.0,
+                                  margin: EdgeInsetsDirectional.fromSTEB(
+                                      1.0, 4.0, 8.0, 4.0),
+                                  hidesUnderline: true,
+                                  isSearchable: true,
+                                  isMultiSelect: false,
+                                );
+                              },
+                            ),
+                          ),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 10.0),
+                          child: FlutterFlowDropDown<String>(
+                            controller: _model.genderValueController ??=
+                                FormFieldController<String>(
+                              _model.genderValue ??= '1',
+                            ),
+                            options: List<String>.from(['1', '2']),
+                            optionLabels: ['Male', 'Female'],
+                            onChanged: (val) =>
+                                setState(() => _model.genderValue = val),
+                            width: MediaQuery.sizeOf(context).width * 0.85,
+                            height: 50.0,
+                            searchHintTextStyle:
+                                FlutterFlowTheme.of(context).labelMedium,
+                            searchTextStyle:
+                                FlutterFlowTheme.of(context).bodyMedium,
+                            textStyle: FlutterFlowTheme.of(context).bodyMedium,
+                            hintText: 'Gender',
+                            searchHintText: 'Search for an item...',
+                            searchCursorColor:
+                                FlutterFlowTheme.of(context).primary,
+                            icon: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              size: 24.0,
+                            ),
+                            fillColor: Color(0xFFE0DEF5),
+                            elevation: 2.0,
+                            borderColor: Colors.transparent,
+                            borderWidth: 2.0,
+                            borderRadius: 8.0,
+                            margin: EdgeInsetsDirectional.fromSTEB(
+                                1.0, 4.0, 8.0, 4.0),
+                            hidesUnderline: true,
+                            isSearchable: true,
+                            isMultiSelect: false,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 10.0),
+                          child: FlutterFlowDropDown<String>(
+                            controller: _model.maritalstatusValueController ??=
+                                FormFieldController<String>(
+                              _model.maritalstatusValue ??= '1',
+                            ),
+                            options: List<String>.from(['1', '2']),
+                            optionLabels: ['Single', 'Married'],
+                            onChanged: (val) =>
+                                setState(() => _model.maritalstatusValue = val),
+                            width: MediaQuery.sizeOf(context).width * 0.85,
+                            height: 50.0,
+                            searchHintTextStyle:
+                                FlutterFlowTheme.of(context).labelMedium,
+                            searchTextStyle:
+                                FlutterFlowTheme.of(context).bodyMedium,
+                            textStyle: FlutterFlowTheme.of(context).bodyMedium,
+                            hintText: 'Gender',
+                            searchHintText: 'Search for an item...',
+                            searchCursorColor:
+                                FlutterFlowTheme.of(context).primary,
+                            icon: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              size: 24.0,
+                            ),
+                            fillColor: Color(0xFFE0DEF5),
+                            elevation: 2.0,
+                            borderColor: Colors.transparent,
+                            borderWidth: 2.0,
+                            borderRadius: 8.0,
+                            margin: EdgeInsetsDirectional.fromSTEB(
+                                1.0, 4.0, 8.0, 4.0),
+                            hidesUnderline: true,
+                            isSearchable: true,
+                            isMultiSelect: false,
+                          ),
+                        ),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               28.0, 0.0, 28.0, 10.0),
                           child: TextFormField(
                             controller: _model.passwordController,
+                            focusNode: _model.passwordFocusNode,
                             obscureText: !_model.passwordVisibility,
                             decoration: InputDecoration(
                               labelText: 'Password',
@@ -358,10 +557,11 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               28.0, 0.0, 28.0, 10.0),
                           child: TextFormField(
-                            controller: _model.businessnameController,
-                            obscureText: false,
+                            controller: _model.confirmpasswordController,
+                            focusNode: _model.confirmpasswordFocusNode,
+                            obscureText: !_model.confirmpasswordVisibility,
                             decoration: InputDecoration(
-                              labelText: 'Business Name',
+                              labelText: 'Confirm Password',
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -370,7 +570,7 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
                                         .customColor4,
                                     fontSize: 14.0,
                                   ),
-                              hintText: 'Enter your Business Name',
+                              hintText: 'Confirm your password',
                               hintStyle:
                                   FlutterFlowTheme.of(context).labelMedium,
                               enabledBorder: UnderlineInputBorder(
@@ -403,126 +603,241 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
                               ),
                               filled: true,
                               fillColor: Color(0xFFE0DEF5),
+                              suffixIcon: InkWell(
+                                onTap: () => setState(
+                                  () => _model.confirmpasswordVisibility =
+                                      !_model.confirmpasswordVisibility,
+                                ),
+                                focusNode: FocusNode(skipTraversal: true),
+                                child: Icon(
+                                  _model.confirmpasswordVisibility
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined,
+                                  size: 20.0,
+                                ),
+                              ),
                             ),
                             style: FlutterFlowTheme.of(context).bodyMedium,
-                            validator: _model.businessnameControllerValidator
+                            validator: _model.confirmpasswordControllerValidator
                                 .asValidator(context),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              28.0, 0.0, 28.0, 10.0),
-                          child: TextFormField(
-                            controller: _model.businessdescriptionController,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              labelText: 'Business Description',
-                              labelStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
-                                    fontFamily: 'Poppins',
-                                    color: FlutterFlowTheme.of(context)
-                                        .customColor4,
-                                    fontSize: 14.0,
+                        if (FFAppState().accounttype == 1)
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                28.0, 0.0, 28.0, 10.0),
+                            child: TextFormField(
+                              controller: _model.personalprofileController,
+                              focusNode: _model.personalprofileFocusNode,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                labelText: 'Business Name',
+                                labelStyle: FlutterFlowTheme.of(context)
+                                    .labelMedium
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color: FlutterFlowTheme.of(context)
+                                          .customColor4,
+                                      fontSize: 14.0,
+                                    ),
+                                hintText: 'Enter your Business Name',
+                                hintStyle:
+                                    FlutterFlowTheme.of(context).labelMedium,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0x00000000),
+                                    width: 2.0,
                                   ),
-                              hintText: 'Enter your Business Description',
-                              hintStyle:
-                                  FlutterFlowTheme.of(context).labelMedium,
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 2.0,
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  width: 2.0,
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
+                                focusedErrorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                borderRadius: BorderRadius.circular(8.0),
+                                filled: true,
+                                fillColor: Color(0xFFE0DEF5),
                               ),
-                              filled: true,
-                              fillColor: Color(0xFFE0DEF5),
+                              style: FlutterFlowTheme.of(context).bodyMedium,
+                              validator: _model
+                                  .personalprofileControllerValidator
+                                  .asValidator(context),
                             ),
-                            style: FlutterFlowTheme.of(context).bodyMedium,
-                            keyboardType: TextInputType.multiline,
-                            validator: _model
-                                .businessdescriptionControllerValidator
-                                .asValidator(context),
                           ),
-                        ),
+                        if (FFAppState().accounttype == 1)
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                28.0, 0.0, 28.0, 10.0),
+                            child: TextFormField(
+                              controller: _model.businessdescriptionController,
+                              focusNode: _model.businessdescriptionFocusNode,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                labelText: 'Business Description',
+                                labelStyle: FlutterFlowTheme.of(context)
+                                    .labelMedium
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color: FlutterFlowTheme.of(context)
+                                          .customColor4,
+                                      fontSize: 14.0,
+                                    ),
+                                alignLabelWithHint: false,
+                                hintText: 'Enter your Business Description',
+                                hintStyle:
+                                    FlutterFlowTheme.of(context).labelMedium,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0x00000000),
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedErrorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                filled: true,
+                                fillColor: Color(0xFFE0DEF5),
+                              ),
+                              style: FlutterFlowTheme.of(context).bodyMedium,
+                              maxLength: 100,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
+                              validator: _model
+                                  .businessdescriptionControllerValidator
+                                  .asValidator(context),
+                            ),
+                          ),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               72.0, 25.0, 72.0, 30.0),
                           child: FFButtonWidget(
                             onPressed: () async {
+                              var _shouldSetState = false;
                               if (_model.firstnameController.text != null &&
                                   _model.firstnameController.text != '') {
-                                _model.apiResultjwu =
-                                    await StoreUserDetailsCall.call(
-                                  name:
-                                      '${_model.firstnameController.text} ${_model.lastnameController.text}',
-                                  email: _model.emailController.text,
-                                  password: _model.passwordController.text,
-                                  phonenumber: FFAppState().phonenumber,
-                                  businessname:
-                                      _model.businessnameController.text,
-                                  description:
-                                      _model.businessdescriptionController.text,
-                                );
-                                if ((_model.apiResultjwu?.succeeded ?? true)) {
-                                  setState(() {
-                                    FFAppState().userid =
-                                        StoreUserDetailsCall.phonenumber(
-                                      (_model.apiResultjwu?.jsonBody ?? ''),
-                                    ).toString();
-                                    FFAppState().firstname =
-                                        _model.firstnameController.text;
-                                    FFAppState().lastname =
-                                        _model.lastnameController.text;
-                                    FFAppState().fingerprint =
-                                        StoreUserDetailsCall.phonenumber(
-                                      (_model.apiResultjwu?.jsonBody ?? ''),
-                                    ).toString();
-                                    FFAppState().fingerprintPassword =
-                                        _model.passwordController.text;
-                                  });
-
-                                  context.goNamed('location');
-                                } else {
+                                if (FFAppState().accounttype == 1) {
+                                  _model.updatedetails1 =
+                                      await UpdateDetailsCall.call(
+                                    id: FFAppState().userid,
+                                    firstname: _model.firstnameController.text,
+                                    lastname: _model.lastnameController.text,
+                                    email: _model.emailController.text,
+                                    password: _model.passwordController.text,
+                                    accounttype:
+                                        FFAppState().accounttype.toString(),
+                                    businessname:
+                                        _model.personalprofileController.text,
+                                    businessdescription: _model
+                                        .businessdescriptionController.text,
+                                    specialization: _model.specializationValue,
+                                    maritalstatus: _model.maritalstatusValue,
+                                    gender: _model.genderValue,
+                                  );
+                                  _shouldSetState = true;
+                                  if ((_model.updatedetails1?.succeeded ??
+                                      true)) {
+                                    FFAppState().update(() {
+                                      FFAppState().fingerprint =
+                                          UpdateDetailsCall.email(
+                                        (_model.updatedetails1?.jsonBody ?? ''),
+                                      )!;
+                                      FFAppState().firstname =
+                                          _model.firstnameController.text;
+                                      FFAppState().lastname =
+                                          _model.lastnameController.text;
+                                      FFAppState().email =
+                                          _model.emailController.text;
+                                    });
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          UpdateDetailsCall.errormsg(
+                                            (_model.updatedetails1?.jsonBody ??
+                                                ''),
+                                          )!,
+                                          style: TextStyle(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                          ),
+                                        ),
+                                        duration: Duration(milliseconds: 4000),
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context).error,
+                                      ),
+                                    );
+                                    if (_shouldSetState) setState(() {});
+                                    return;
+                                  }
+                                }
+                                GoRouter.of(context).prepareAuthEvent();
+                                if (_model.passwordController.text !=
+                                    _model.confirmpasswordController.text) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                        StoreUserDetailsCall.message(
-                                          (_model.apiResultjwu?.jsonBody ?? ''),
-                                        ).toString(),
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
+                                        'Passwords don\'t match!',
                                       ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
                                     ),
                                   );
+                                  return;
                                 }
+
+                                final user =
+                                    await authManager.createAccountWithEmail(
+                                  context,
+                                  _model.emailController.text,
+                                  _model.passwordController.text,
+                                );
+                                if (user == null) {
+                                  return;
+                                }
+
+                                await UsersRecord.collection
+                                    .doc(user.uid)
+                                    .update(createUsersRecordData(
+                                      email: FFAppState().email,
+                                      uid: FFAppState().userid.toString(),
+                                      displayName:
+                                          '${FFAppState().firstname} ${FFAppState().lastname}',
+                                      accountType: FFAppState().accounttype,
+                                      phoneNumber: FFAppState().phonenumber,
+                                    ));
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -538,16 +853,19 @@ class _BusinessProfileWidgetState extends State<BusinessProfileWidget> {
                                         FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
+                                if (_shouldSetState) setState(() {});
+                                return;
                               }
 
-                              setState(() {});
+                              context.goNamedAuth('location', context.mounted);
+
+                              if (_shouldSetState) setState(() {});
                             },
                             text: 'Continue',
                             options: FFButtonOptions(
                               width: double.infinity,
                               height: 54.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
+                              padding: EdgeInsets.all(0.0),
                               iconPadding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 0.0, 0.0, 0.0),
                               color: FlutterFlowTheme.of(context).primary,

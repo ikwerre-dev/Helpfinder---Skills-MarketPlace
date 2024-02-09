@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'auth/firebase_auth/firebase_user_provider.dart';
+import 'auth/firebase_auth/auth_util.dart';
+
+import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
-import 'flutter_flow/internationalization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'flutter_flow/nav/nav.dart';
@@ -15,6 +19,7 @@ import 'index.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
+  await initFirebase();
 
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
@@ -35,13 +40,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale? _locale;
   ThemeMode _themeMode = ThemeMode.system;
+
+  late Stream<BaseAuthUser> userStream;
 
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
 
-  bool displaySplashImage = true;
+  final authUserSub = authenticatedUserStream.listen((_) {});
 
   @override
   void initState() {
@@ -49,13 +55,20 @@ class _MyAppState extends State<MyApp> {
 
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
-
-    Future.delayed(Duration(milliseconds: 1000),
-        () => setState(() => _appStateNotifier.stopShowingSplashImage()));
+    userStream = helpfinderFirebaseUserStream()
+      ..listen((user) => _appStateNotifier.update(user));
+    jwtTokenStream.listen((_) {});
+    Future.delayed(
+      Duration(milliseconds: 1000),
+      () => _appStateNotifier.stopShowingSplashImage(),
+    );
   }
 
-  void setLocale(String language) {
-    setState(() => _locale = createLocale(language));
+  @override
+  void dispose() {
+    authUserSub.cancel();
+
+    super.dispose();
   }
 
   void setThemeMode(ThemeMode mode) => setState(() {
@@ -67,16 +80,13 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp.router(
       title: 'Helpfinder',
       localizationsDelegates: [
-        FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: _locale,
       supportedLocales: const [Locale('en', '')],
       theme: ThemeData(
         brightness: Brightness.light,
-        scrollbarTheme: ScrollbarThemeData(),
       ),
       themeMode: _themeMode,
       routerConfig: _router,
@@ -111,7 +121,8 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       'HomePage': HomePageWidget(),
       'search': SearchWidget(),
-      'Videos': VideosWidget(),
+      'posts': PostsWidget(),
+      'AllChatsPage': AllChatsPageWidget(),
       'setting': SettingWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
@@ -175,7 +186,7 @@ class _NavBarPageState extends State<NavBarPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.ondemand_video,
+                  Icons.post_add_outlined,
                   color: currentIndex == 2
                       ? FlutterFlowTheme.of(context).primaryBackground
                       : FlutterFlowTheme.of(context).primaryBtnText,
@@ -189,8 +200,24 @@ class _NavBarPageState extends State<NavBarPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.settings,
+                  currentIndex == 3
+                      ? Icons.chat_bubble_rounded
+                      : Icons.chat_bubble_outline,
                   color: currentIndex == 3
+                      ? FlutterFlowTheme.of(context).primaryBackground
+                      : FlutterFlowTheme.of(context).primaryBtnText,
+                  size: currentIndex == 3 ? 24.0 : 24.0,
+                ),
+              ],
+            ),
+          ),
+          FloatingNavbarItem(
+            customWidget: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.settings,
+                  color: currentIndex == 4
                       ? FlutterFlowTheme.of(context).primaryBackground
                       : FlutterFlowTheme.of(context).primaryBtnText,
                   size: 24.0,

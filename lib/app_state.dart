@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'flutter_flow/request_manager.dart';
+import '/backend/backend.dart';
 import 'backend/api_requests/api_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/flutter_flow_util.dart';
+import 'dart:convert';
 
 class FFAppState extends ChangeNotifier {
   static FFAppState _instance = FFAppState._internal();
@@ -28,9 +30,6 @@ class FFAppState extends ChangeNotifier {
           prefs.getStringList('ff_yAxis')?.map(double.parse).toList() ?? _yAxis;
     });
     _safeInit(() {
-      _userid = prefs.getString('ff_userid') ?? _userid;
-    });
-    _safeInit(() {
       _firstname = prefs.getString('ff_firstname') ?? _firstname;
     });
     _safeInit(() {
@@ -52,6 +51,48 @@ class FFAppState extends ChangeNotifier {
       _fingerprintPassword =
           prefs.getString('ff_fingerprintPassword') ?? _fingerprintPassword;
     });
+    _safeInit(() {
+      if (prefs.containsKey('ff_myJson')) {
+        try {
+          _myJson = jsonDecode(prefs.getString('ff_myJson') ?? '');
+        } catch (e) {
+          print("Can't decode persisted json. Error: $e.");
+        }
+      }
+    });
+    _safeInit(() {
+      _description = prefs.getString('ff_description') ?? _description;
+    });
+    _safeInit(() {
+      _accounttype = prefs.getInt('ff_accounttype') ?? _accounttype;
+    });
+    _safeInit(() {
+      _userid = prefs.getInt('ff_userid') ?? _userid;
+    });
+    _safeInit(() {
+      _showbalance = prefs.getInt('ff_showbalance') ?? _showbalance;
+    });
+    _safeInit(() {
+      _email = prefs.getString('ff_email') ?? _email;
+    });
+    _safeInit(() {
+      if (prefs.containsKey('ff_searchJson')) {
+        try {
+          _searchJson = jsonDecode(prefs.getString('ff_searchJson') ?? '');
+        } catch (e) {
+          print("Can't decode persisted json. Error: $e.");
+        }
+      }
+    });
+    _safeInit(() {
+      if (prefs.containsKey('ff_nearbyusers')) {
+        try {
+          _nearbyusers = jsonDecode(prefs.getString('ff_nearbyusers') ?? '');
+        } catch (e) {
+          print("Can't decode persisted json. Error: $e.");
+        }
+      }
+    });
   }
 
   void update(VoidCallback callback) {
@@ -61,7 +102,7 @@ class FFAppState extends ChangeNotifier {
 
   late SharedPreferences prefs;
 
-  List<double> _xAxis = [1, 2, 3, 4, 5, 6, 7];
+  List<double> _xAxis = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0];
   List<double> get xAxis => _xAxis;
   set xAxis(List<double> _value) {
     _xAxis = _value;
@@ -96,7 +137,7 @@ class FFAppState extends ChangeNotifier {
     prefs.setStringList('ff_xAxis', _xAxis.map((x) => x.toString()).toList());
   }
 
-  List<double> _yAxis = [2, 3, 6, 4, 5, 3, 4];
+  List<double> _yAxis = [2.0, 3.0, 6.0, 4.0, 5.0, 3.0, 4.0];
   List<double> get yAxis => _yAxis;
   set yAxis(List<double> _value) {
     _yAxis = _value;
@@ -135,13 +176,6 @@ class FFAppState extends ChangeNotifier {
   String get otp => _otp;
   set otp(String _value) {
     _otp = _value;
-  }
-
-  String _userid = '';
-  String get userid => _userid;
-  set userid(String _value) {
-    _userid = _value;
-    prefs.setString('ff_userid', _value);
   }
 
   String _firstname = '';
@@ -227,30 +261,91 @@ class FFAppState extends ChangeNotifier {
     _search = _value;
   }
 
-  final _searchqueryManager = FutureRequestManager<ApiCallResponse>();
-  Future<ApiCallResponse> searchquery({
+  dynamic _myJson;
+  dynamic get myJson => _myJson;
+  set myJson(dynamic _value) {
+    _myJson = _value;
+    prefs.setString('ff_myJson', jsonEncode(_value));
+  }
+
+  String _description = '';
+  String get description => _description;
+  set description(String _value) {
+    _description = _value;
+    prefs.setString('ff_description', _value);
+  }
+
+  int _accounttype = 0;
+  int get accounttype => _accounttype;
+  set accounttype(int _value) {
+    _accounttype = _value;
+    prefs.setInt('ff_accounttype', _value);
+  }
+
+  int _userid = 0;
+  int get userid => _userid;
+  set userid(int _value) {
+    _userid = _value;
+    prefs.setInt('ff_userid', _value);
+  }
+
+  int _showbalance = 0;
+  int get showbalance => _showbalance;
+  set showbalance(int _value) {
+    _showbalance = _value;
+    prefs.setInt('ff_showbalance', _value);
+  }
+
+  String _email = '';
+  String get email => _email;
+  set email(String _value) {
+    _email = _value;
+    prefs.setString('ff_email', _value);
+  }
+
+  dynamic _searchJson;
+  dynamic get searchJson => _searchJson;
+  set searchJson(dynamic _value) {
+    _searchJson = _value;
+    prefs.setString('ff_searchJson', jsonEncode(_value));
+  }
+
+  dynamic _nearbyusers;
+  dynamic get nearbyusers => _nearbyusers;
+  set nearbyusers(dynamic _value) {
+    _nearbyusers = _value;
+    prefs.setString('ff_nearbyusers', jsonEncode(_value));
+  }
+
+  final _categoryManager = FutureRequestManager<ApiCallResponse>();
+  Future<ApiCallResponse> category({
     String? uniqueQueryKey,
     bool? overrideCache,
     required Future<ApiCallResponse> Function() requestFn,
   }) =>
-      _searchqueryManager.performRequest(
+      _categoryManager.performRequest(
         uniqueQueryKey: uniqueQueryKey,
         overrideCache: overrideCache,
         requestFn: requestFn,
       );
-  void clearSearchqueryCache() => _searchqueryManager.clear();
-  void clearSearchqueryCacheKey(String? uniqueKey) =>
-      _searchqueryManager.clearRequest(uniqueKey);
-}
+  void clearCategoryCache() => _categoryManager.clear();
+  void clearCategoryCacheKey(String? uniqueKey) =>
+      _categoryManager.clearRequest(uniqueKey);
 
-LatLng? _latLngFromString(String? val) {
-  if (val == null) {
-    return null;
-  }
-  final split = val.split(',');
-  final lat = double.parse(split.first);
-  final lng = double.parse(split.last);
-  return LatLng(lat, lng);
+  final _catsearchManager = FutureRequestManager<ApiCallResponse>();
+  Future<ApiCallResponse> catsearch({
+    String? uniqueQueryKey,
+    bool? overrideCache,
+    required Future<ApiCallResponse> Function() requestFn,
+  }) =>
+      _catsearchManager.performRequest(
+        uniqueQueryKey: uniqueQueryKey,
+        overrideCache: overrideCache,
+        requestFn: requestFn,
+      );
+  void clearCatsearchCache() => _catsearchManager.clear();
+  void clearCatsearchCacheKey(String? uniqueKey) =>
+      _catsearchManager.clearRequest(uniqueKey);
 }
 
 void _safeInit(Function() initializeField) {

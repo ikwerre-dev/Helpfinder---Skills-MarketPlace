@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,10 +16,10 @@ import 'enter_password_model.dart';
 export 'enter_password_model.dart';
 
 class EnterPasswordWidget extends StatefulWidget {
-  const EnterPasswordWidget({Key? key}) : super(key: key);
+  const EnterPasswordWidget({super.key});
 
   @override
-  _EnterPasswordWidgetState createState() => _EnterPasswordWidgetState();
+  State<EnterPasswordWidget> createState() => _EnterPasswordWidgetState();
 }
 
 class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
@@ -55,7 +56,10 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
     _model = createModel(context, () => EnterPasswordModel());
 
     _model.passwordController1 ??= TextEditingController();
+    _model.passwordFocusNode1 ??= FocusNode();
+
     _model.passwordController2 ??= TextEditingController();
+    _model.passwordFocusNode2 ??= FocusNode();
   }
 
   @override
@@ -67,6 +71,15 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -240,12 +253,13 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
                             ],
                             borderRadius: BorderRadius.circular(12.0),
                           ),
-                          alignment: AlignmentDirectional(0.00, 0.00),
+                          alignment: AlignmentDirectional(0.0, 0.0),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               TextFormField(
                                 controller: _model.passwordController1,
+                                focusNode: _model.passwordFocusNode1,
                                 obscureText: !_model.passwordVisibility1,
                                 decoration: InputDecoration(
                                   hintText: 'Enter password',
@@ -352,12 +366,13 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
                             ],
                             borderRadius: BorderRadius.circular(12.0),
                           ),
-                          alignment: AlignmentDirectional(0.00, 0.00),
+                          alignment: AlignmentDirectional(0.0, 0.0),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               TextFormField(
                                 controller: _model.passwordController2,
+                                focusNode: _model.passwordFocusNode2,
                                 obscureText: !_model.passwordVisibility2,
                                 decoration: InputDecoration(
                                   hintText: 'Confirm password',
@@ -469,7 +484,7 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget>
                   options: FFButtonOptions(
                     width: double.infinity,
                     height: 54.0,
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    padding: EdgeInsets.all(0.0),
                     iconPadding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     color: FlutterFlowTheme.of(context).primary,

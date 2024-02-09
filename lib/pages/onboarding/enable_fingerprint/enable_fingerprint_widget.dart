@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,10 +17,10 @@ import 'enable_fingerprint_model.dart';
 export 'enable_fingerprint_model.dart';
 
 class EnableFingerprintWidget extends StatefulWidget {
-  const EnableFingerprintWidget({Key? key}) : super(key: key);
+  const EnableFingerprintWidget({super.key});
 
   @override
-  _EnableFingerprintWidgetState createState() =>
+  State<EnableFingerprintWidget> createState() =>
       _EnableFingerprintWidgetState();
 }
 
@@ -66,6 +67,15 @@ class _EnableFingerprintWidgetState extends State<EnableFingerprintWidget>
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -261,7 +271,7 @@ class _EnableFingerprintWidgetState extends State<EnableFingerprintWidget>
                   options: FFButtonOptions(
                     width: double.infinity,
                     height: 54.0,
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    padding: EdgeInsets.all(0.0),
                     iconPadding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     color: FlutterFlowTheme.of(context).primary,

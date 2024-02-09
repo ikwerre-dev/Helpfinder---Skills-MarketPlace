@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,10 +16,10 @@ import 'user_interest_model.dart';
 export 'user_interest_model.dart';
 
 class UserInterestWidget extends StatefulWidget {
-  const UserInterestWidget({Key? key}) : super(key: key);
+  const UserInterestWidget({super.key});
 
   @override
-  _UserInterestWidgetState createState() => _UserInterestWidgetState();
+  State<UserInterestWidget> createState() => _UserInterestWidgetState();
 }
 
 class _UserInterestWidgetState extends State<UserInterestWidget>
@@ -216,6 +217,15 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -389,8 +399,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                                       borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          22.0, 22.0, 22.0, 22.0),
+                                      padding: EdgeInsets.all(22.0),
                                       child: Image.asset(
                                         'assets/images/watermelonn.png',
                                         width: 100.0,
@@ -436,8 +445,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                                       borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 20.0, 20.0, 20.0),
+                                      padding: EdgeInsets.all(20.0),
                                       child: SvgPicture.asset(
                                         'assets/images/Wheat.svg',
                                         width: 100.0,
@@ -483,8 +491,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                                       borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 20.0, 20.0, 20.0),
+                                      padding: EdgeInsets.all(20.0),
                                       child: SvgPicture.asset(
                                         'assets/images/Leaves.svg',
                                         width: 100.0,
@@ -530,8 +537,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                                       borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 20.0, 20.0, 20.0),
+                                      padding: EdgeInsets.all(20.0),
                                       child: SvgPicture.asset(
                                         'assets/images/Sport_Ball.svg',
                                         width: 100.0,
@@ -577,8 +583,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                                       borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 20.0, 20.0, 20.0),
+                                      padding: EdgeInsets.all(20.0),
                                       child: SvgPicture.asset(
                                         'assets/images/Crushed_Cigarette.svg',
                                         width: 100.0,
@@ -624,8 +629,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                                       borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 20.0, 20.0, 20.0),
+                                      padding: EdgeInsets.all(20.0),
                                       child: SvgPicture.asset(
                                         'assets/images/Bed.svg',
                                         width: 100.0,
@@ -671,8 +675,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                                       borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 20.0, 20.0, 20.0),
+                                      padding: EdgeInsets.all(20.0),
                                       child: SvgPicture.asset(
                                         'assets/images/muscle.svg',
                                         width: 100.0,
@@ -718,8 +721,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                                       borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 20.0, 20.0, 20.0),
+                                      padding: EdgeInsets.all(20.0),
                                       child: SvgPicture.asset(
                                         'assets/images/Sneaker.svg',
                                         width: 100.0,
@@ -765,8 +767,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                                       borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 20.0, 20.0, 20.0),
+                                      padding: EdgeInsets.all(20.0),
                                       child: SvgPicture.asset(
                                         'assets/images/carrot.svg',
                                         width: 100.0,
@@ -819,7 +820,7 @@ class _UserInterestWidgetState extends State<UserInterestWidget>
                   options: FFButtonOptions(
                     width: double.infinity,
                     height: 54.0,
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    padding: EdgeInsets.all(0.0),
                     iconPadding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     color: FlutterFlowTheme.of(context).primary,

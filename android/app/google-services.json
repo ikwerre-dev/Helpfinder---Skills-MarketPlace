@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "407116440944",
+    "project_id": "fit-me-0icfds",
+    "storage_bucket": "fit-me-0icfds.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407116440944:android:8fb832bfe9d7f3bf649bb5",
+        "android_client_info": {
+          "package_name": "com.helpfinder.ng"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHxAYFjBrLDZ4QwZB1fsrEBpMQOTIDm8w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

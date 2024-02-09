@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,10 +16,10 @@ import 'turn_on_notification_model.dart';
 export 'turn_on_notification_model.dart';
 
 class TurnOnNotificationWidget extends StatefulWidget {
-  const TurnOnNotificationWidget({Key? key}) : super(key: key);
+  const TurnOnNotificationWidget({super.key});
 
   @override
-  _TurnOnNotificationWidgetState createState() =>
+  State<TurnOnNotificationWidget> createState() =>
       _TurnOnNotificationWidgetState();
 }
 
@@ -65,6 +66,15 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -235,7 +245,7 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
                                           shape: BoxShape.circle,
                                         ),
                                         alignment:
-                                            AlignmentDirectional(0.00, 0.00),
+                                            AlignmentDirectional(0.0, 0.0),
                                         child: Icon(
                                           Icons.notifications,
                                           color: Colors.white,
@@ -274,7 +284,7 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
                                             shape: BoxShape.circle,
                                           ),
                                           alignment:
-                                              AlignmentDirectional(0.00, 0.00),
+                                              AlignmentDirectional(0.0, 0.0),
                                           child: Icon(
                                             Icons.spa,
                                             color: Colors.white,
@@ -315,7 +325,7 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
                                             shape: BoxShape.circle,
                                           ),
                                           alignment:
-                                              AlignmentDirectional(0.00, 0.00),
+                                              AlignmentDirectional(0.0, 0.0),
                                           child: Icon(
                                             Icons.personal_video_outlined,
                                             color: Colors.white,
@@ -352,22 +362,14 @@ class _TurnOnNotificationWidgetState extends State<TurnOnNotificationWidget>
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(72.0, 0.0, 72.0, 60.0),
                 child: FFButtonWidget(
-                  onPressed: () async {
-                    context.pushNamed(
-                      'personalProfile',
-                      extra: <String, dynamic>{
-                        kTransitionInfoKey: TransitionInfo(
-                          hasTransition: true,
-                          transitionType: PageTransitionType.fade,
-                        ),
-                      },
-                    );
+                  onPressed: () {
+                    print('Button pressed ...');
                   },
                   text: 'Allow',
                   options: FFButtonOptions(
                     width: double.infinity,
                     height: 54.0,
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    padding: EdgeInsets.all(0.0),
                     iconPadding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     color: FlutterFlowTheme.of(context).primary,

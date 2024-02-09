@@ -1,11 +1,15 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -13,10 +17,10 @@ import 'profile_picture_model.dart';
 export 'profile_picture_model.dart';
 
 class ProfilePictureWidget extends StatefulWidget {
-  const ProfilePictureWidget({Key? key}) : super(key: key);
+  const ProfilePictureWidget({super.key});
 
   @override
-  _ProfilePictureWidgetState createState() => _ProfilePictureWidgetState();
+  State<ProfilePictureWidget> createState() => _ProfilePictureWidgetState();
 }
 
 class _ProfilePictureWidgetState extends State<ProfilePictureWidget>
@@ -56,6 +60,15 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget>
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -132,8 +145,8 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget>
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 12.0, 0.0, 12.0, 0.0),
                             child: Container(
-                              width: 72.0,
-                              height: 72.0,
+                              width: 200.0,
+                              height: 200.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).tertiary,
                                 boxShadow: [
@@ -143,25 +156,24 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget>
                                     offset: Offset(0.0, 0.0),
                                   )
                                 ],
-                                borderRadius: BorderRadius.circular(24.0),
+                                borderRadius: BorderRadius.circular(54.0),
                               ),
                               child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    4.0, 4.0, 4.0, 4.0),
+                                padding: EdgeInsets.all(4.0),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50.0),
                                   child: Image.memory(
                                     _model.uploadedLocalFile.bytes ??
                                         Uint8List.fromList([]),
-                                    width: 100.0,
-                                    height: 100.0,
+                                    width: 200.0,
+                                    height: 200.0,
                                     fit: BoxFit.cover,
                                     errorBuilder:
                                         (context, error, stackTrace) =>
                                             Image.asset(
                                       'assets/images/error_image.png',
-                                      width: 100.0,
-                                      height: 100.0,
+                                      width: 200.0,
+                                      height: 200.0,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -286,16 +298,30 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget>
                   onPressed: () async {
                     if (_model.uploadedLocalFile != null &&
                         (_model.uploadedLocalFile.bytes?.isNotEmpty ?? false)) {
-                      _model.apiResultfp0 = await UploadProfilePictureCall.call(
-                        phonenumber: FFAppState().phonenumber,
+                      _model.addprofilepicture =
+                          await AddProfilePictureCall.call(
+                        id: FFAppState().userid,
+                        accounttype: FFAppState().accounttype,
                         profilePicture: _model.uploadedLocalFile,
                       );
-                      if ((_model.apiResultfp0?.succeeded ?? true)) {
+                      if ((_model.addprofilepicture?.succeeded ?? true)) {
+                        setState(() {
+                          FFAppState().profilepicture = getJsonField(
+                            (_model.addprofilepicture?.jsonBody ?? ''),
+                            r'''$.profilePicture''',
+                          ).toString();
+                        });
+
+                        await currentUserReference!
+                            .update(createUsersRecordData(
+                          photoUrl: FFAppState().profilepicture,
+                        ));
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              UploadProfilePictureCall.message(
-                                (_model.apiResultfp0?.jsonBody ?? ''),
+                              getJsonField(
+                                (_model.addprofilepicture?.jsonBody ?? ''),
+                                r'''$.message''',
                               ).toString(),
                               style: TextStyle(
                                 color: FlutterFlowTheme.of(context).primaryText,
@@ -306,15 +332,35 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget>
                                 FlutterFlowTheme.of(context).secondary,
                           ),
                         );
-                        setState(() {
-                          FFAppState().profilepicture =
-                              UploadProfilePictureCall.profilepic(
-                            (_model.apiResultfp0?.jsonBody ?? ''),
-                          );
-                        });
 
                         context.goNamed('GetStarted');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Upload Failed',
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor: FlutterFlowTheme.of(context).error,
+                          ),
+                        );
                       }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Please upload a profile picture to continue',
+                            style: TextStyle(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                            ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor: FlutterFlowTheme.of(context).error,
+                        ),
+                      );
                     }
 
                     setState(() {});
@@ -323,7 +369,7 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget>
                   options: FFButtonOptions(
                     width: double.infinity,
                     height: 54.0,
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    padding: EdgeInsets.all(0.0),
                     iconPadding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     color: FlutterFlowTheme.of(context).primary,
