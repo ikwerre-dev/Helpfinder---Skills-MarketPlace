@@ -8,7 +8,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart'
 import 'welcome_page_widget.dart' show WelcomePageWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +27,10 @@ class WelcomePageModel extends FlutterFlowModel<WelcomePageWidget> {
 
   /// Initialization and disposal methods.
 
+  @override
   void initState(BuildContext context) {}
 
+  @override
   void dispose() {
     unfocusNode.dispose();
   }

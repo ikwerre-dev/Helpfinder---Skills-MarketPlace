@@ -62,11 +62,13 @@ class BusinessProfileModel extends FlutterFlowModel<BusinessProfileWidget> {
 
   /// Initialization and disposal methods.
 
+  @override
   void initState(BuildContext context) {
     passwordVisibility = false;
     confirmpasswordVisibility = false;
   }
 
+  @override
   void dispose() {
     unfocusNode.dispose();
     firstnameFocusNode?.dispose();

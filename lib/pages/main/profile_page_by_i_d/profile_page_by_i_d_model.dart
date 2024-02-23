@@ -9,7 +9,6 @@ import 'profile_page_by_i_d_widget.dart' show ProfilePageByIDWidget;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -22,8 +21,10 @@ class ProfilePageByIDModel extends FlutterFlowModel<ProfilePageByIDWidget> {
 
   /// Initialization and disposal methods.
 
+  @override
   void initState(BuildContext context) {}
 
+  @override
   void dispose() {
     unfocusNode.dispose();
   }

@@ -21,8 +21,10 @@ class StateModel extends FlutterFlowModel<StateWidget> {
 
   /// Initialization and disposal methods.
 
+  @override
   void initState(BuildContext context) {}
 
+  @override
   void dispose() {
     unfocusNode.dispose();
   }

@@ -6,7 +6,6 @@ import '/flutter_flow/upload_data.dart';
 import 'dart:async';
 import 'gallery_widget.dart' show GalleryWidget;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -26,8 +25,10 @@ class GalleryModel extends FlutterFlowModel<GalleryWidget> {
 
   /// Initialization and disposal methods.
 
+  @override
   void initState(BuildContext context) {}
 
+  @override
   void dispose() {
     unfocusNode.dispose();
   }

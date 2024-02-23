@@ -7,7 +7,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'verify_mobile_widget.dart' show VerifyMobileWidget;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -23,10 +22,12 @@ class VerifyMobileModel extends FlutterFlowModel<VerifyMobileWidget> {
 
   /// Initialization and disposal methods.
 
+  @override
   void initState(BuildContext context) {
     pinCodeController = TextEditingController();
   }
 
+  @override
   void dispose() {
     unfocusNode.dispose();
     pinCodeController?.dispose();

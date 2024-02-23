@@ -7,7 +7,6 @@ import 'enter_password_widget.dart' show EnterPasswordWidget;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,11 +30,13 @@ class EnterPasswordModel extends FlutterFlowModel<EnterPasswordWidget> {
 
   /// Initialization and disposal methods.
 
+  @override
   void initState(BuildContext context) {
     passwordVisibility1 = false;
     passwordVisibility2 = false;
   }
 
+  @override
   void dispose() {
     unfocusNode.dispose();
     passwordFocusNode1?.dispose();
